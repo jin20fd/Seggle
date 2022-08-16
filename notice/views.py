@@ -1,5 +1,5 @@
 from .models import Notice
-from .serializers import NoticeSerializer
+from .serializers import NoticeSerializer, NoticeCheckSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -55,7 +55,12 @@ class AdminNoticeCheckDetail(APIView):
 
     def put(self, request, pk):
         notice = self.get_object(pk)
-        serializer = NoticeSerializer(notice, data=request.data)
+        data = request.data
+        obj = {
+            "visible" : data["visible"],
+            "important" : data["important"],
+        }
+        serializer = NoticeCheckSerializer(notice, data=obj)
 
         if serializer.is_valid():
             serializer.save()
